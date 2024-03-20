@@ -1,8 +1,7 @@
 plugins {
-    id("groovy") 
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.3.2"
-    id("io.micronaut.aot") version "4.3.2"
+    id("groovy")
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.micronaut.application") version "3.7.10"
 }
 
 version = "0.1"
@@ -13,26 +12,24 @@ repositories {
 }
 
 dependencies {
-    implementation "io.micronaut.tracing:micronaut-tracing-core"
+    implementation "io.micronaut:micronaut-tracing"
 
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-jackson-databind")
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    compileOnly("io.micronaut:micronaut-http-client")
+    implementation("jakarta.annotation:jakarta.annotation-api")
     compileOnly("io.micronaut:micronaut-http-validation")
-    compileOnly("io.micronaut.serde:micronaut-serde-processor")
     runtimeOnly("ch.qos.logback:logback-classic")
-    testImplementation("io.micronaut:micronaut-http-client")
 }
 
 
 application {
-    mainClass.set("mn.log.ip.Application")
+    mainClass.set("mn.log.ip2.Application")
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
+    sourceCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("11")
 }
-
 
 graalvmNative.toolchainDetection = false
 micronaut {
@@ -42,18 +39,4 @@ micronaut {
         incremental(true)
         annotations("mn.log.ip.*")
     }
-    aot {
-    // Please review carefully the optimizations enabled below
-    // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
-        optimizeServiceLoading = false
-        convertYamlToJava = false
-        precomputeOperations = true
-        cacheEnvironment = true
-        optimizeClassLoading = true
-        deduceEnvironment = true
-        optimizeNetty = true
-    }
 }
-
-
-

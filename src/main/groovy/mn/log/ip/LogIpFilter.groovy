@@ -26,6 +26,7 @@ class LogIpFilter implements HttpServerFilter, Ordered {
     /**
      * Set the current IP to the logger.
      * @see <a href="http://logback.qos.ch/manual/mdc.html"/>
+     * @see io.micronaut.tracing.instrument.util.MdcInstrumenter
      */
     @Override
     Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
