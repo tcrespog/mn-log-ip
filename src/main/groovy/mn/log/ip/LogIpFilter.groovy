@@ -3,6 +3,7 @@ package mn.log.ip
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.micronaut.core.order.Ordered
+import io.micronaut.core.propagation.PropagatedContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
@@ -13,8 +14,10 @@ import io.micronaut.http.server.util.HttpClientAddressResolver
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.slf4j.MDC
-
+import io.micronaut.context.propagation.slf4j.MdcPropagationContext
 @Slf4j
 @Singleton
 @CompileStatic
@@ -30,7 +33,9 @@ class LogIpFilter implements HttpServerFilter, Ordered {
     @Override
     Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         MDC.put('ip', getClientIp())
-        return chain.proceed(request)
+        try (PropagatedContext.Scope ignore = PropagatedContext.getOrEmpty().plus(new MdcPropagationContext()).propagate()) {
+            return chain.proceed(request)
+        }
     }
 
     @Override
